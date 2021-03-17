@@ -7,11 +7,10 @@ const Router = require('koa-router'),
 const router = new Router();
 
 router
-    .get('/users', list)
-    .get('/users/:id', getId)
-    .post('/users/', KoaBody(), createItem)
-    .put('/users/:id', KoaBody(), updateItem)
-    .delete('/users/:id', removeItem);
+    .get('/databases', clickhouse.getDatabasesList)
+    .get('/databases/:name/tables', clickhouse.getDatabaseTable)
+    .get('/databases/:name/tables/:tableName/fields', clickhouse.getTableFields)
+    .post('/report/', KoaBody(), clickhouse.createReport);
 
 module.exports = {
     routes() {
@@ -21,19 +20,3 @@ module.exports = {
         return router.allowedMethods()
     }
 };
-
-// const Router = require('koa-router'),
-//     {getHello, getTicker} = require('../controllers/testController'),
-//     router = new Router();
-// ;
-//
-//     router
-//         .get('/test', getHello)
-//         .get('/test/:name', getHello)
-//         .get('/ticker/:ticker', getTicker)
-//     ;
-//
-// module.exports = {
-//     routes () { return router.routes() },
-//     allowedMethods () { return router.allowedMethods() }
-// };
