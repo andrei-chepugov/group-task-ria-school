@@ -1,6 +1,10 @@
+const fs = require('fs');
 const config = require('config');
 const {ClickHouse} = require('clickhouse');
 const clickhouse = new ClickHouse(config.clickhouse);
+const initDB = fs.readFileSync('./app/managers/queries/initDB.sql');
+
+clickhouse.query(initDB);
 
 const queries = [
     'DROP TABLE IF EXISTS session_temp',
