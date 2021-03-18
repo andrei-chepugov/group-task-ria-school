@@ -33,6 +33,18 @@ async function getDatabaseTablesFromDB(db) {
 
 exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
 
+
+const typeMapping = {
+    "Date": "Date",
+    "String": "String",
+    "UInt8": "Number",
+    "UInt16": "Number",
+    "UInt32": "Number",
+    "Array(UInt8)": "[Number]",
+    "Array(UInt16)": "[Number]",
+    "Array(UInt32)": "[Number]",
+}
+
 /**
  * Get all fields from table
  * @param db
@@ -41,7 +53,11 @@ exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
  */
 async function getTableFieldsFromDB(db, table) {
     const query = `SELECT name, type FROM system.columns WHERE database = '${db}' AND table = '${table}'`;
-    return clickhouse.query(query).toPromise();
+    return clickhouse.query(query).toPromise().then((result) => {
+        return result.map((element) => {
+            return {name: element.name, type: typeMapping[element.type]};
+        });
+    });
 }
 
 exports.getTableFieldsFromDB = getTableFieldsFromDB;
