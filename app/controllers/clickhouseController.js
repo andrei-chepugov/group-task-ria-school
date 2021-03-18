@@ -1,11 +1,12 @@
 const myDB = require('../managers/clickhouseDBManager');
 
+
 /**
  * @example curl -XGET "http://localhost:8081/databases"
  */
 async function getDatabasesList(ctx, next) {
-    const names = await myDB.getDatabasesListFromDB()
-    if (names.length !== 0) {
+    const names = await myDB.getDatabasesListFromDB();
+    if (Array.isArray(names) && names.length) {
         ctx.body = names;
         ctx.status = 200;
     } else {
@@ -23,8 +24,8 @@ exports.getDatabasesList = getDatabasesList;
  */
 async function getDatabaseTables(ctx, next) {
     const db = String(ctx.params.name);
-    const names = await myDB.getDatabaseTablesFromDB(db)
-    if (names.length !== 0) {
+    const names = await myDB.getDatabaseTablesFromDB(db);
+    if (Array.isArray(names) && names.length) {
         ctx.body = names;
         ctx.status = 200;
     } else {
@@ -43,8 +44,8 @@ exports.getDatabaseTable = getDatabaseTables;
 async function getTableFields(ctx, next) {
     const db = String(ctx.params.name);
     const table = String(ctx.params.tableName);
-    const names = await myDB.getTableFieldsfromDB(db, table)
-    if (names.length !== 0) {
+    const names = await myDB.getTableFieldsFromDB(db, table);
+    if (Array.isArray(names) && names.length) {
         ctx.body = names;
         ctx.status = 200;
     } else {
@@ -56,6 +57,10 @@ async function getTableFields(ctx, next) {
 
 exports.getTableFields = getTableFields;
 
+
+/**
+ * @example curl -XPOST "http://localhost:8081/report/" -d '{...}' -H 'Content-Type: application/json'
+ */
 function createReport() {
     //
 }
