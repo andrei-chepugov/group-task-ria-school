@@ -1,10 +1,14 @@
 const fs = require('fs');
 const config = require('config');
 const {ClickHouse} = require('clickhouse');
+const click = require('../helpers/click');
 
 const clickhouse = new ClickHouse(config.clickhouse);
 const initDB = fs.readFileSync('./app/managers/queries/initDB.sql');
 
+/**
+ * Initiate database
+ */
 clickhouse.query(initDB);
 
 /**
@@ -13,13 +17,7 @@ clickhouse.query(initDB);
  */
 async function getDatabasesListFromDB() {
     const queries = ["SELECT name FROM system.databases WHERE name != 'system'"];
-    for (const query of queries) {
-        try {
-            return await clickhouse.query(query).toPromise();
-        } catch (e) {
-            console.log(e);
-        }
-    }
+    return await click(queries);
 }
 
 exports.getDatabasesListFromDB = getDatabasesListFromDB;
@@ -31,13 +29,7 @@ exports.getDatabasesListFromDB = getDatabasesListFromDB;
  */
 async function getDatabaseTablesFromDB(db) {
     const queries = ["SELECT name FROM system.tables WHERE database = '" + db + "'"];
-    for (const query of queries) {
-        try {
-            return await clickhouse.query(query).toPromise();
-        } catch (e) {
-            console.log(e);
-        }
-    }
+    return await click(queries);
 }
 
 exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
@@ -48,29 +40,9 @@ exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
  * @param table
  * @return {Promise}
  */
-async function getTableFieldsfronDB(db, table) {
+async function getTableFieldsfromDB(db, table) {
     const queries = ["SELECT name, type FROM system.columns WHERE database = '" + db + "' AND table = '" + table + "'"]
-    for (const query of queries) {
-        try {
-            return await clickhouse.query(query).toPromise();
-        } catch (e) {
-            console.log(e);
-        }
-    }
+    return await click(queries);
 }
 
-exports.getTableFieldsfronDB = getTableFieldsfronDB;
-
-
-// async function click() {
-//     for (const query of queries) {
-//         try {
-//             const r = await clickhouse.query(query).toPromise();
-//             console.log(query, r);
-//         } catch (e) {
-//             console.log(e);
-//         }
-//     }
-// }
-//
-// click();
+exports.getTableFieldsfromDB = getTableFieldsfromDB;

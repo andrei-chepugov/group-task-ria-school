@@ -43,7 +43,7 @@ exports.getDatabaseTable = getDatabaseTables;
 async function getTableFields(ctx, next) {
     const db = String(ctx.params.name);
     const table = String(ctx.params.tableName);
-    const names = await myDB.getTableFieldsfronDB(db, table)
+    const names = await myDB.getTableFieldsfromDB(db, table)
     if (names.length !== 0) {
         ctx.body = names;
         ctx.status = 200;
