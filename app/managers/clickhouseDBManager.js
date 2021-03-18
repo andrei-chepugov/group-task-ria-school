@@ -1,7 +1,6 @@
 const fs = require('fs');
 const config = require('config');
 const {ClickHouse} = require('clickhouse');
-const click = require('../helpers/click');
 
 const clickhouse = new ClickHouse(config.clickhouse);
 const initDB = fs.readFileSync('./app/managers/queries/initDB.sql');
@@ -16,8 +15,8 @@ clickhouse.query(initDB);
  * @return {Promise}
  */
 async function getDatabasesListFromDB() {
-    const queries = ["SELECT name FROM system.databases WHERE name != 'system'"];
-    return await click(queries);
+    const query = "SELECT name FROM system.databases WHERE name != 'system'";
+    return clickhouse.query(query).toPromise();
 }
 
 exports.getDatabasesListFromDB = getDatabasesListFromDB;
@@ -28,8 +27,8 @@ exports.getDatabasesListFromDB = getDatabasesListFromDB;
  * @return {Promise}
  */
 async function getDatabaseTablesFromDB(db) {
-    const queries = ["SELECT name FROM system.tables WHERE database = '" + db + "'"];
-    return await click(queries);
+    const query = `SELECT name FROM system.tables WHERE database = '${db}' `;
+    return clickhouse.query(query).toPromise();
 }
 
 exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
@@ -41,8 +40,8 @@ exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
  * @return {Promise}
  */
 async function getTableFieldsFromDB(db, table) {
-    const queries = ["SELECT name, type FROM system.columns WHERE database = '" + db + "' AND table = '" + table + "'"]
-    return await click(queries);
+    const query = `SELECT name, type FROM system.columns WHERE database = '${db}' AND table = '${table}'`;
+    return clickhouse.query(query).toPromise();
 }
 
 exports.getTableFieldsFromDB = getTableFieldsFromDB;
