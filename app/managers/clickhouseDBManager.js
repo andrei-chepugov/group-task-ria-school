@@ -40,9 +40,9 @@ exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
  * @param table
  * @return {Promise}
  */
-async function getTableFieldsfromDB(db, table) {
+async function getTableFieldsFromDB(db, table) {
     const queries = ["SELECT name, type FROM system.columns WHERE database = '" + db + "' AND table = '" + table + "'"]
     return await click(queries);
 }
 
-exports.getTableFieldsfromDB = getTableFieldsfromDB;
+exports.getTableFieldsFromDB = getTableFieldsFromDB;
