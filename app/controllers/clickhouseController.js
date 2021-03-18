@@ -1,32 +1,57 @@
-const myDb = require('../managers/clickhouseDBManager');
+const myDB = require('../managers/clickhouseDBManager');
 
-function getDatabasesList(ctx, next) {
-    ctx.body = ['slon', 'mviews'];
+/**
+ * @example curl -XGET "http://localhost:8081/databases"
+ */
+async function getDatabasesList(ctx, next) {
+    const names = await myDB.getDatabasesFromDB()
+    if (names.length !== 0) {
+        ctx.body = [names];
+        ctx.status = 200;
+    } else {
+        ctx.body = 'Not Found';
+        ctx.status = 404;
+    }
+    await next();
 }
 
 exports.getDatabasesList = getDatabasesList;
 
-function getDatabaseTables(ctx, next) {
-    ctx.body = ['facts', 'r_tags_v2'];
+
+/**
+ * @example curl -XGET "http://localhost:8081/databases/:name/tables"
+ */
+async function getDatabaseTables(ctx, next) {
+    const db = String(ctx.params.name);
+    const names = await myDB.getDatabaseTablesFromDB(db)
+    if (names.length !== 0) {
+        ctx.body = [names];
+        ctx.status = 200;
+    } else {
+        ctx.body = 'Not Found';
+        ctx.status = 404;
+    }
+    await next();
 }
 
 exports.getDatabaseTable = getDatabaseTables;
 
-function getTableFields(ctx, next) {
-    ctx.body = [
-        {name: `EventDate`, type: 'Date'},
-        {name: `HourDate`, type: 'Number'},
-        {name: `MinuteDate`, type: 'Number'},
-        {name: `SecondDate`, type: 'Number'},
-        {name: `web_id`, type: 'Number'},
-        {name: `user_id`, type: 'Number'},
-        {name: `project_id`, type: 'Number'},
-        {name: `r_audience`, type: 'String'},
-        {name: `r_source`, type: 'String'},
-        {name: `r_medium`, type: 'String'},
-        {name: `r_campaign`, type: 'String'},
-        {name: `event_id`, type: '[Number]'}
-    ]
+
+/**
+ * @example curl -XGET "http://localhost:8081/databases/:name/tables/:tableName/fields"
+ */
+async function getTableFields(ctx, next) {
+    const db = String(ctx.params.name);
+    const table = String(ctx.params.tableName);
+    const names = await myDB.getTableFieldsfronDB(db, table)
+    if (names.length !== 0) {
+        ctx.body = [names];
+        ctx.status = 200;
+    } else {
+        ctx.body = 'Not Found';
+        ctx.status = 404;
+    }
+    await next();
 }
 
 exports.getTableFields = getTableFields;

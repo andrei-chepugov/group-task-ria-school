@@ -1,35 +1,76 @@
 const fs = require('fs');
 const config = require('config');
 const {ClickHouse} = require('clickhouse');
+
 const clickhouse = new ClickHouse(config.clickhouse);
 const initDB = fs.readFileSync('./app/managers/queries/initDB.sql');
 
 clickhouse.query(initDB);
 
-const queries = [
-    'DROP TABLE IF EXISTS session_temp',
-
-    `CREATE TABLE session_temp
-     (
-         date    Date,
-         time    DateTime,
-         mark    String,
-         ips     Array(UInt32),
-         queries Nested ( act String,
-             id UInt32
-             )
-     ) ENGINE=MergeTree(date, (mark, time), 8192)`
-];
-
-async function click() {
+/**
+ * Get all names databases from memory
+ * @return {Promise}
+ */
+async function getDatabasesFromDB() {
+    const queries = ["SELECT name FROM system.databases WHERE name != 'system'"];
     for (const query of queries) {
         try {
-            const r = await clickhouse.query(query).toPromise();
-            console.log(query, r);
+            return await clickhouse.query(query).toPromise();
         } catch (e) {
             console.log(e);
         }
     }
 }
 
-click();
+exports.getDatabasesFromDB = getDatabasesFromDB;
+
+/**
+ * Get all tables from memory DB
+ * @param db
+ * @return {Promise}
+ */
+async function getDatabaseTablesFromDB(db) {
+    const queries = ["SELECT name FROM system.tables WHERE database = '" + db + "'"];
+    for (const query of queries) {
+        try {
+            return await clickhouse.query(query).toPromise();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+exports.getDatabaseTablesFromDB = getDatabaseTablesFromDB;
+
+/**
+ * Get all fields from table
+ * @param db
+ * @param table
+ * @return {Promise}
+ */
+async function getTableFieldsfronDB(db, table) {
+    const queries = ["SELECT name, type FROM system.columns WHERE database = '" + db + "' AND table = '" + table + "'"]
+    for (const query of queries) {
+        try {
+            return await clickhouse.query(query).toPromise();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+exports.getTableFieldsfronDB = getTableFieldsfronDB;
+
+
+// async function click() {
+//     for (const query of queries) {
+//         try {
+//             const r = await clickhouse.query(query).toPromise();
+//             console.log(query, r);
+//         } catch (e) {
+//             console.log(e);
+//         }
+//     }
+// }
+//
+// click();
