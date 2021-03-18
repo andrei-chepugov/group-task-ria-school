@@ -4,9 +4,9 @@ const myDB = require('../managers/clickhouseDBManager');
  * @example curl -XGET "http://localhost:8081/databases"
  */
 async function getDatabasesList(ctx, next) {
-    const names = await myDB.getDatabasesFromDB()
+    const names = await myDB.getDatabasesListFromDB()
     if (names.length !== 0) {
-        ctx.body = [names];
+        ctx.body = names;
         ctx.status = 200;
     } else {
         ctx.body = 'Not Found';
@@ -25,7 +25,7 @@ async function getDatabaseTables(ctx, next) {
     const db = String(ctx.params.name);
     const names = await myDB.getDatabaseTablesFromDB(db)
     if (names.length !== 0) {
-        ctx.body = [names];
+        ctx.body = names;
         ctx.status = 200;
     } else {
         ctx.body = 'Not Found';
@@ -45,7 +45,7 @@ async function getTableFields(ctx, next) {
     const table = String(ctx.params.tableName);
     const names = await myDB.getTableFieldsfronDB(db, table)
     if (names.length !== 0) {
-        ctx.body = [names];
+        ctx.body = names;
         ctx.status = 200;
     } else {
         ctx.body = 'Not Found';

@@ -11,7 +11,7 @@ clickhouse.query(initDB);
  * Get all names databases from memory
  * @return {Promise}
  */
-async function getDatabasesFromDB() {
+async function getDatabasesListFromDB() {
     const queries = ["SELECT name FROM system.databases WHERE name != 'system'"];
     for (const query of queries) {
         try {
@@ -22,7 +22,7 @@ async function getDatabasesFromDB() {
     }
 }
 
-exports.getDatabasesFromDB = getDatabasesFromDB;
+exports.getDatabasesListFromDB = getDatabasesListFromDB;
 
 /**
  * Get all tables from memory DB

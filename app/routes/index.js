@@ -1,6 +1,5 @@
 const Router = require('koa-router'),
     KoaBody = require('koa-body'),
-    {getId, list, createItem, updateItem, removeItem} = require('../controllers/indexController'),
     clickhouse = require('../controllers/clickhouseController')
 
 
