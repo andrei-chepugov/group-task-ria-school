@@ -20,7 +20,7 @@ exports.getDatabasesList = getDatabasesList;
 
 
 /**
- * @example curl -XGET "http://localhost:8081/databases/:name/tables"
+ * @example curl -XGET "http://localhost:8081/databases/slon/tables"
  */
 async function getDatabaseTables(ctx, next) {
     const db = String(ctx.params.name);
@@ -39,7 +39,7 @@ exports.getDatabaseTable = getDatabaseTables;
 
 
 /**
- * @example curl -XGET "http://localhost:8081/databases/:name/tables/:tableName/fields"
+ * @example curl -XGET "http://localhost:8081/databases/slon/tables/facts/fields"
  */
 async function getTableFields(ctx, next) {
     const db = String(ctx.params.name);
