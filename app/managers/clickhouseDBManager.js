@@ -1,9 +1,11 @@
 const fs = require('fs');
 const config = require('config');
 const {ClickHouse} = require('clickhouse');
+const {buildQuery} = require('../helpers/buildQuery');
 
 const clickhouse = new ClickHouse(config.clickhouse);
 const initDB = fs.readFileSync('./app/managers/queries/initDB.sql');
+
 
 /**
  * Initiate database
@@ -15,7 +17,9 @@ clickhouse.query(initDB);
  * @return {Promise}
  */
 async function getDatabasesListFromDB() {
-    const query = "SELECT name FROM system.databases WHERE name != 'system'";
+    const query = `SELECT name
+                   FROM system.databases
+                   WHERE name != 'system'`;
     return clickhouse.query(query).toPromise();
 }
 
@@ -61,3 +65,10 @@ async function getTableFieldsFromDB(db, table) {
 }
 
 exports.getTableFieldsFromDB = getTableFieldsFromDB;
+
+async function createReportToDB(params) {
+    const query = buildQuery(params);
+    return clickhouse.query(query).toPromise();
+}
+
+exports.createReportToDB = createReportToDB;

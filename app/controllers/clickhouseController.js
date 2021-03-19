@@ -59,10 +59,11 @@ exports.getTableFields = getTableFields;
 
 
 /**
- * @example curl -XPOST "http://localhost:8081/report/" -d '{...}' -H 'Content-Type: application/json'
+ * @example curl -XPOST "http://localhost:8081/report/" -H 'Content-Type: application/json' -d '{...}'
  */
-function createReport() {
-    //
+async function createReport(ctx, next) {
+    ctx.body = await myDB.createReportToDB(ctx.request.body);
+    await next();
 }
 
 exports.createReport = createReport;
