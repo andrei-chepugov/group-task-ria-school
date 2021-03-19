@@ -1,1 +1,0 @@
-module.exports = () => new Date().getTime() + String(Math.floor(Math.random() * 1000)).padStart(4, '0');
