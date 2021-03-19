@@ -19,7 +19,7 @@ clickhouse.query(initDB);
 async function getDatabasesListFromDB() {
     const query = `SELECT name
                    FROM system.databases
-                   WHERE name != 'system'`;
+                   WHERE name NOT IN ('system', 'default')`;
     return clickhouse.query(query).toPromise();
 }
 
