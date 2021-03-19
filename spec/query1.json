@@ -1,0 +1,85 @@
+{
+  "name": "Отчёт1",
+  "fields": [
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "user_id"
+    },
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "proposal_id",
+      "function": "max"
+    }
+  ],
+  "source": {
+    "database": "slon",
+    "table": "facts",
+    "joins": [
+      {
+        "database": "mviews",
+        "table": "calltracking",
+        "foreignKey": "user_id",
+        "targetKey": "user_id"
+      }
+    ]
+  },
+  "filters": [
+    {
+      "field": {
+        "database": "slon",
+        "table": "facts",
+        "name": "user_id"
+      },
+      "actions": [
+        {
+          "op": ">",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "field": {
+        "database": "slon",
+        "table": "facts",
+        "name": "EventDate"
+      },
+      "actions": [
+        {
+          "op": ">",
+          "value": "2018-01-01"
+        }
+      ]
+    },
+    {
+      "field": {
+        "database": "slon",
+        "table": "facts",
+        "name": "EventDate"
+      },
+      "actions": [
+        {
+          "op": "<",
+          "value": "2022-01-01"
+        }
+      ]
+    }
+  ],
+  "group": [
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "user_id"
+    }
+  ],
+  "order": [
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "user_id",
+      "type": "asc"
+    }
+  ],
+  "limit": 100
+}
