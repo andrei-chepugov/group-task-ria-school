@@ -66,7 +66,7 @@ function buildOrder(orderList) {
 function buildQuery(params) {
     let result = '';
 
-    const limit = params.limit > 0 && params.limit < 1000 ? params.limit : 100;
+    const limit = params.limit > 0 && params.limit < 1000 ? params.limit : 1000;
 
     result = `SELECT ${buildFields(params.fields)}`;
     result += ` FROM ${buildSource(params.source)}`;
