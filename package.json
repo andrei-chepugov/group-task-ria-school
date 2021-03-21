@@ -18,15 +18,15 @@
     "koa-router": "7.4.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
     "forever": "^3.0.4",
-    "frisby": "^0.8.5",
     "get-port": "^3.0.0",
-    "jasmine-node": "*"
+    "mocha": "^8.3.2"
   },
   "scripts": {
     "start": "node --harmony index.js",
     "start:watch": "forever -w index.js",
-    "test": "node --harmony ./node_modules/jasmine-node/lib/jasmine-node/cli.js spec"
+    "test": "mocha app/**/*.test.js"
   },
   "engines": {
     "node": ">=7.6.x"

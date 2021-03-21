@@ -1,0 +1,14 @@
+{
+  "name": "List1",
+  "fields": [
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "user_id"
+    }
+  ],
+  "source": {
+    "database": "slon",
+    "table": "facts"
+  }
+}
