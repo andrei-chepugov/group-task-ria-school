@@ -1,0 +1,28 @@
+{
+  "name": "Medium",
+  "fields": [
+    {
+      "database": "slon",
+      "table": "facts",
+      "name": "EventDate"
+    },
+    {
+      "database": "slon",
+      "table": "r_tags_v2",
+      "name": "event_id"
+    }
+  ],
+  "source": {
+    "database": "slon",
+    "table": "facts",
+    "joins": [
+      {
+        "database": "slon",
+        "table": "r_tags_v2",
+        "foreignKey": "user_id",
+        "targetKey": "user_id"
+      }
+    ]
+  },
+  "limit": 100
+}

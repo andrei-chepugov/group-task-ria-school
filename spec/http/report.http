@@ -2,7 +2,7 @@ POST http://localhost:8081/report
 Content-Type: application/json
 
 {
-  "name": "Отчёт1",
+  "name": "List1",
   "fields": [
     {
       "database": "slon",
