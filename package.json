@@ -1,10 +1,10 @@
 {
   "name": "myKoajsRestApp",
   "version": "3.5.3",
-  "description": "A simple Koajs 2 REST Application Skeleton in ES6 style",
+  "description": "A simple Koajs 2 REST Application in ES6 style",
   "author": {
     "name": "Andrei Chepugov",
-    "email": "Andrei.Chepugov@gmail.com"
+    "email": "andrei.chepugov@gmail.com"
   },
   "directories": {
     "lib": "./app/controllers",

@@ -34,7 +34,7 @@ const initReportsHistory = fs.readFileSync('./app/managers/queries/initDB/initRe
 async function getDatabasesListFromDB() {
     const query = `SELECT name
                    FROM system.databases
-                   WHERE name NOT IN ('system', 'default')`;
+                   WHERE name NOT IN ('system', 'default', 'reports')`;
     return clickhouse.query(query).toPromise();
 }
 
@@ -65,7 +65,7 @@ const typeMapping = {
 }
 
 /**
- * Get all fields names from table
+ * Get all names fields from table
  * @param db
  * @param table
  * @return {Promise}
