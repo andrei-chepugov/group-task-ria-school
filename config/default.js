@@ -24,5 +24,12 @@ module.exports = {
             output_format_json_quote_64bit_integers : 0,
             enable_http_compression                 : 0,
         }
+    },
+    mariaDb: {
+        host: 'localhost',
+        user: 'andrei',
+        password: '1994',
+        database: 'users',
+        connectionLimit: 5
     }
 };
