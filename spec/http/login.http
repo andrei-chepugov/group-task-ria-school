@@ -1,0 +1,9 @@
+POST http://localhost:8081/sign-in
+Content-Type: application/json
+
+{
+  "name": "Andrei",
+  "surname": "Chepugov",
+  "email": "andrei.chepugov@ria.com",
+  "password": "123"
+}
