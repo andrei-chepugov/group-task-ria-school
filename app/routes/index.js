@@ -1,15 +1,21 @@
 const Router = require('koa-router'),
     KoaBody = require('koa-body'),
-    clickhouse = require('../controllers/clickhouseController')
+    schemaController = require('../controllers/schemaController'),
+    userController = require('../controllers/userController'),
+    reportController = require('../controllers/reportController')
 
 const router = new Router();
 
 router
-    .get('/databases', clickhouse.getDatabasesList)
-    .get('/databases/:name/tables', clickhouse.getDatabaseTable)
-    .get('/databases/:name/tables/:tableName/fields', clickhouse.getTableFields)
-    .get('/reports', clickhouse.getReportsList)
-    .post('/report', KoaBody(), clickhouse.createReport);
+    .get('/admin/databases', schemaController.getDatabasesList)
+    .get('/databases', schemaController.getDatabasesListForUser)
+    .get('/admin/databases/:name/tables', schemaController.getDatabaseTable)
+    .get('/databases/:name/tables', schemaController.getDatabaseTable) // in progress...
+    .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
+    .get('/reports', reportController.getReportsList)
+    .post('/report', KoaBody(), reportController.createReport)
+    .post('/login', KoaBody(), userController.getLoginUser) // Set-Cookie
+    .post('/sign-in', KoaBody(), userController.createUser);
 
 module.exports = {
     routes() {

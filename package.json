@@ -15,11 +15,12 @@
     "config": ">=3.1.0",
     "koa": ">=2.7.0",
     "koa-body": ">=4.1.0",
-    "koa-router": "7.4.0"
+    "koa-router": "7.4.0",
+    "mariadb": "^2.5.3"
   },
   "devDependencies": {
     "chai": "^4.3.4",
-    "forever": "^3.0.4",
+    "forever": "^0.10.10",
     "get-port": "^3.0.0",
     "mocha": "^8.3.2"
   },
