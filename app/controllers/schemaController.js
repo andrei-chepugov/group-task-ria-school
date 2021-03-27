@@ -3,15 +3,14 @@ const mariaDB = require('../managers/mariaDBManager');
 
 
 /**
- * @example curl -XGET "http://localhost:8081/admin/databases"
+ * @example curl -XGET "http://localhost:8081/databases"
  */
 async function getDatabasesList(ctx, next) {
-    const names = await clickhouseDB.getDatabasesListFromDB();
-    if (Array.isArray(names) && names.length) {
-        ctx.body = names;
+    const databaseNames = await mariaDB.getDatabaseNamesByToken(ctx.cookies.get('token'));
+    if (Array.isArray(databaseNames) && databaseNames.length) {
+        ctx.body = databaseNames;
         ctx.status = 200;
     } else {
-        ctx.body = 'Not Found';
         ctx.status = 404;
     }
     await next();
@@ -21,34 +20,14 @@ exports.getDatabasesList = getDatabasesList;
 
 
 /**
- * @example curl -XGET "http://localhost:8081/databases"
- */
-async function getDatabasesListForUser(ctx, next) {
-    const databaseNames = await mariaDB.f(ctx.cookies.get('token'));
-    if (Array.isArray(databaseNames) && databaseNames.length) {
-        ctx.body = databaseNames;
-        ctx.status = 200;
-    } else {
-        ctx.body = 'Not Found';
-        ctx.status = 404;
-    }
-    await next();
-}
-
-exports.getDatabasesListForUser = getDatabasesListForUser;
-
-
-/**
  * @example curl -XGET "http://localhost:8081/databases/slon/tables"
  */
 async function getDatabaseTables(ctx, next) {
-    const db = String(ctx.params.name);
-    const names = await clickhouseDB.getDatabaseTablesFromDB(db);
-    if (Array.isArray(names) && names.length) {
-        ctx.body = names;
+    const tableNames = await mariaDB.getTableNameInDatabaseByToken(ctx.cookies.get('token'), ctx.params.name);
+    if (Array.isArray(tableNames) && tableNames.length) {
+        ctx.body = tableNames;
         ctx.status = 200;
     } else {
-        ctx.body = 'Not Found';
         ctx.status = 404;
     }
     await next();
@@ -68,7 +47,6 @@ async function getTableFields(ctx, next) {
         ctx.body = names;
         ctx.status = 200;
     } else {
-        ctx.body = 'Not Found';
         ctx.status = 404;
     }
     await next();
