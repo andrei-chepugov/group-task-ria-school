@@ -1,8 +1,10 @@
+const fs = require('fs');
 const config = require('config');
 const mariadb = require('mariadb');
 const generateToken = require('../helpers/generateToken.js');
 
 const pool = mariadb.createPool(config.mariaDb);
+const initMariaDb = fs.readFileSync('./app/managers/queries/initDBMariaDb/initDB.sql', 'utf-8');
 
 class CreateUserError extends Error {
 }
@@ -24,6 +26,22 @@ class UserTokenError extends Error {
 
 class GetNames extends Error {
 }
+
+
+/**
+ * Initiate database
+ */
+(async function initDB() {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        await conn.query(initMariaDb);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release(); //release to pool
+    }
+})()
 
 
 /**
