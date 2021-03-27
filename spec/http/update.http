@@ -1,0 +1,12 @@
+PUT http://localhost:8081/admin/update-user
+Content-Type: application/json
+Cookie: token=16166777948950458
+
+{
+  "id": "1",
+  "firstName": "Billy",
+  "lastName": "Bons",
+  "email": "billy.bons@ria.com",
+  "pass": "700",
+  "isAdmin": 0
+}
