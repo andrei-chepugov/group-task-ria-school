@@ -109,13 +109,16 @@ async function saveHistoryReportsToDB(params) {
 exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
 
 /**
- * Get fields from table
- * @param params
+ * Get all fields from table
+ * @param user
  * @return {Promise}
  */
-async function createReportToDB(params) {
-    const query = buildQuery(params);
+async function getReportsfromDB(user) {
+    let query = user.isAdmin ?
+        `SELECT *
+         FROM reports.history;` :
+        `SELECT * FROM reports.history WHERE id_user = '${user.id}' OR id_report IN (SELECT id_report FROM reports.transferred WHERE id_user = '${user.id}');`;
     return clickhouse.query(query).toPromise();
 }
 
-exports.createReportToDB = createReportToDB;
+exports.getReportsfromDB = getReportsfromDB;

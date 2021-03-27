@@ -1,12 +1,14 @@
 const clickhouseDB = require('../managers/clickhouseDBManager');
-const mariaDBManager = require('../managers/mariaDBManager');
+const mariaDB = require('../managers/mariaDBManager');
 
 
 /**
  * @example curl -XGET "http://localhost:8081/reports"
  */
 async function getReportsList(ctx, next) {
-    const reports = await clickhouseDB.getReportsfromDB();
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    const reports = await clickhouseDB.getReportsfromDB(user);
     if (Array.isArray(reports) && reports.length) {
         ctx.body = reports;
         ctx.status = 200;
