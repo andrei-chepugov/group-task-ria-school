@@ -8,7 +8,7 @@ const minusPERIOD = -1;
  * @example curl -XGET "http://localhost:8081/user"
  */
 async function getUserByToken(ctx, next) {
-    const token = ctx.cookies.get('token')
+    const token = ctx.cookies.get('token');
     if (token) {
         const user = await mariaDB.getUserByTokenFromDB(token);
         if (user) {
@@ -30,7 +30,7 @@ exports.getUserByToken = getUserByToken;
  * @example curl -XGET "http://localhost:8081/logout"
  */
 async function getLogoutUserByToken(ctx, next) {
-    const token = ctx.cookies.get('token')
+    const token = ctx.cookies.get('token');
     if (token) {
         const user = await mariaDB.getUserByTokenFromDB(token);
         if (user) {
@@ -39,7 +39,7 @@ async function getLogoutUserByToken(ctx, next) {
                 path: '/',
                 expires: new Date(minusPERIOD + Date.now())
             });
-            ctx.body = user;
+            ctx.status = 200;
         } else {
             ctx.status = 401;
         }

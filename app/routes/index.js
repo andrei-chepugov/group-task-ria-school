@@ -9,20 +9,28 @@ const Router = require('koa-router'),
 const router = new Router();
 
 router
-    .get('/admin/databases', schemaAdminController.getDatabasesList) // for admin
-    .get('/admin/databases/:name/tables', schemaAdminController.getDatabaseTable) // for admin
-    .get('/admin/access-rights/:user/:table', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
-    .get('/admin/delete/:id', adminController.deleteUser) // for admin
-    .get('/user', userController.getUserByToken) // for user
-    .get('/logout', KoaBody(), userController.getLogoutUserByToken) // Set-Cookie
-    .get('/databases', schemaController.getDatabasesList) // for user
-    .get('/databases/:name/tables', schemaController.getDatabaseTable) // for user
-    .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields) // for user
-    .get('/reports', reportController.getReportsList) // for admin & user
-    .post('/admin/update', KoaBody(), adminController.updateUser) // for admin, in progress...
-    .post('/sign-in', KoaBody(), userController.createUser) // Set-Cookie
-    .post('/login', KoaBody(), userController.getLoginUser) // Set-Cookie
-    .post('/report', KoaBody(), reportController.createReport); // for user
+    // for admin
+    .get('/admin/users', adminController.getUsersByToken)
+    .get('/admin/delete/:id', adminController.deleteUser)
+    .get('/admin/databases', schemaAdminController.getDatabasesList)
+    .get('/admin/databases/:name/tables', schemaAdminController.getDatabaseTable)
+    .put('/admin/update-user', KoaBody(), adminController.updateUser)
+    // .get('/admin/user/:id/granted', )
+    // .put('/admin/', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
+    // .put('/admin/access-rights', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
+    // for user schema
+    .get('/user', userController.getUserByToken)
+    .get('/logout', KoaBody(), userController.getLogoutUserByToken)
+    .post('/sign-in', KoaBody(), userController.createUser)
+    .post('/login', KoaBody(), userController.getLoginUser)
+    // for user
+    .get('/databases', schemaController.getDatabasesList)
+    .get('/databases/:name/tables', schemaController.getDatabaseTable)
+    .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
+    .get('/reports', reportController.getReportsList) // for admin & user (true/false)
+    .post('/report', KoaBody(), reportController.createReport) // for user, in progress...
+    // "_comment": "User template share",
+    // "_comment": "Admin update user permissions",
 
 module.exports = {
     routes() {

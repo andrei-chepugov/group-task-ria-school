@@ -16,6 +16,9 @@ class UpdateUserError extends Error {
 class DeleteUserError extends Error {
 }
 
+class UsersTokenError extends Error {
+}
+
 class UserTokenError extends Error {
 }
 
@@ -35,7 +38,7 @@ async function createUserInDB(params) {
         conn = await pool.getConnection();
         const res = await conn.query(`
             INSERT INTO users.users (firstName, lastName, email, pass, isAdmin, token)
-            VALUES (?, ?, ?, ?, ?, ?)`, [params.name, params.surname, params.email, params.password, 0, generateToken()]);
+            VALUES (?, ?, ?, ?, ?, ?);`, [params.name, params.surname, params.email, params.password, 0, generateToken()]);
         if (res.affectedRows === 1) {
             return res.insertId;
         } else {
@@ -65,7 +68,7 @@ async function getLoginUserFromDB(params) {
             SELECT id, firstName, lastName, email, isAdmin, token
             FROM users.users
             WHERE email = ?
-              AND pass = ?`, [params.email, params.password]);
+              AND pass = ?;`, [params.email, params.password]);
         if (rows[0]) {
             return rows[0];
         } else {
@@ -83,17 +86,43 @@ exports.getLoginUserFromDB = getLoginUserFromDB;
 
 /**
  * Update user from DB
- * @param {{id: number}} id
+ * @description to admins usage only (modifies isAdmin field params)
+ * @param {{id: number, firstName: string, lastName: string, email: string, pass: string, isAdmin: boolean}} params
  * @return {Promise<{affectedRows: number} | null>}
  * @throws {UpdateUserError}
  */
-async function updateUserInDB(id) {
+async function updateUserInDB(params) {
     let conn;
     try {
+        let query = `UPDATE users.users
+                     SET `;
+        let queryParams = [];
+        let querySets = [];
+        if (params.firstName !== undefined) {
+            querySets.push(`firstName = ?`);
+            queryParams.push(params.firstName);
+        }
+        if (params.lastName !== undefined) {
+            querySets.push(`lastName = ?`);
+            queryParams.push(params.lastName);
+        }
+        if (params.email !== undefined) {
+            querySets.push(`email = ?`);
+            queryParams.push(params.email);
+        }
+        if (params.pass !== undefined) {
+            querySets.push(`pass = ?`);
+            queryParams.push(params.pass);
+        }
+        if (params.isAdmin !== undefined) {
+            querySets.push(`isAdmin = ?`);
+            queryParams.push(params.isAdmin);
+        }
+        query += querySets.join(', ');
+        query += ` WHERE id = ?;`;
+        queryParams.push(params.id);
         conn = await pool.getConnection();
-        const res = await conn.query(`UPDATE users.users
-                                          SET ? = ?
-                                      WHERE id = ?;`, [id]);
+        const res = await conn.query(query, queryParams);
         if (res.affectedRows === 1) {
             return res.affectedRows;
         } else {
@@ -138,19 +167,49 @@ exports.deleteUserInDB = deleteUserInDB;
 
 
 /**
+ * Get users from DB
+ * @return {Promise<{rows: string} | null>}
+ * @throws {UsersTokenError}
+ */
+async function getUsersByTokenFromDB() {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(`
+            SELECT *
+            FROM users.users;`);
+        if (rows) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        throw new UsersTokenError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.getUsersByTokenFromDB = getUsersByTokenFromDB;
+
+
+/**
  * Get user from DB
  * @param token
  * @return {Promise<{rows[0]: string} | null>}
  * @throws {UserTokenError}
  */
 async function getUserByTokenFromDB(token) {
+    if (typeof token !== 'string') {
+        return null;
+    }
     let conn;
     try {
         conn = await pool.getConnection();
         const rows = await conn.query(`
             SELECT *
             FROM users.users
-            WHERE token = ?`, [token]);
+            WHERE token = ?;`, [token]);
         if (rows[0]) {
             return rows[0];
         } else {
@@ -184,7 +243,7 @@ async function getDatabaseNamesByToken(token) {
                              FROM users.usersTables
                              WHERE user_id IN (SELECT id
                                                FROM users.users
-                                               WHERE token = ?))`, [token]);
+                                               WHERE token = ?));`, [token]);
         } else {
             return null;
         }
@@ -218,7 +277,7 @@ async function getTableNameInDatabaseByToken(token, databaseName) {
                              WHERE user_id IN (SELECT id
                                                FROM users.users
                                                WHERE token = ?))
-                  AND tables.database = ?`, [token, databaseName]);
+                  AND tables.database = ?;`, [token, databaseName]);
         } else {
             return null;
         }
@@ -250,7 +309,7 @@ async function getTablesDatabaseByToken(token) {
                              FROM users.usersTables
                              WHERE user_id IN (SELECT id
                                                FROM users.users
-                                               WHERE token = ?))`, [token]);
+                                               WHERE token = ?));`, [token]);
             if (databaseNames) {
                 return databaseNames;
             } else {

@@ -83,30 +83,33 @@ async function getTableFieldsFromDB(db, table) {
 
 exports.getTableFieldsFromDB = getTableFieldsFromDB;
 
-
 /**
- * Get all fields from table
+ * Get fields from table
+ * @param params
  * @return {Promise}
  */
-async function getReportsfromDB() {
-    const query = `SELECT *
-                   FROM reports.history`;
+async function createReportToDB(params) {
+    const query = buildQuery(params);
     return clickhouse.query(query).toPromise();
 }
 
-exports.getReportsfromDB = getReportsfromDB;
+exports.createReportToDB = createReportToDB;
 
 
 /**
  * Save all reports in DB
+ * @param params
+ * @param user
  * @return {Promise}
  */
-async function saveHistoryReportsToDB(params) {
-    const query = `INSERT INTO reports.history (request) VALUES ('${JSON.stringify(params)}')`;
+async function saveHistoryReportsToDB(params, user) {
+    const query = `INSERT INTO reports.history (id_user, name, request) VALUES ('${user.id}', '${params.name}', '${JSON.stringify(params)}')`;
     return clickhouse.query(query).toPromise();
 }
 
 exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
+
+// INSERT INTO reports.transferred (id_user, id_report) VALUES ('1', 'c7cce607-3736-47e3-938f-5bc9bff02094');
 
 /**
  * Get all fields from table

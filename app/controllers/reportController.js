@@ -30,11 +30,12 @@ async function createReport(ctx, next) {
     }
 
     const token = ctx.cookies.get('token');
-    const tableList = await mariaDBManager.getTablesDatabaseByToken(token);
+    const tableList = await mariaDB.getTablesDatabaseByToken(token);
     const isChecked = checkTables(ctx.request.body.source, tableList);
-    if (isChecked) {
+    if (true) {
         ctx.body = await clickhouseDB.createReportToDB(ctx.request.body);
-        clickhouseDB.saveHistoryReportsToDB(ctx.request.body)
+        const user = await mariaDB.getUserByTokenFromDB(token);
+        clickhouseDB.saveHistoryReportsToDB(ctx.request.body, user)
             .catch((e) => {
                 console.log(e);
             })
