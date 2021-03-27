@@ -5,14 +5,14 @@ const {buildQuery} = require('../helpers/buildQuery');
 
 const clickhouse = new ClickHouse(config.clickhouse);
 
-const initSlon = fs.readFileSync('./app/managers/queries/initDB/initSlon.sql', 'utf-8');
-const initMviews = fs.readFileSync('./app/managers/queries/initDB/initMviews.sql', 'utf-8');
-const initReports = fs.readFileSync('./app/managers/queries/initDB/initReports.sql', 'utf-8');
-const initSlonFacts = fs.readFileSync('./app/managers/queries/initDB/initSlonFacts.sql', 'utf-8');
-const initSlonR_tags_v2 = fs.readFileSync('./app/managers/queries/initDB/initSlonR_tags_v2.sql', 'utf-8');
-const initMviewsCalltracking = fs.readFileSync('./app/managers/queries/initDB/initMviewsCalltracking.sql', 'utf-8');
-const initReportsHistory = fs.readFileSync('./app/managers/queries/initDB/initReportsHistory.sql', 'utf-8');
-const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/initDB/initReportsHistoryTransferred.sql', 'utf-8');
+const initSlon = fs.readFileSync('./app/managers/queries/initDBClickhouse/initSlon.sql', 'utf-8');
+const initMviews = fs.readFileSync('./app/managers/queries/initDBClickhouse/initMviews.sql', 'utf-8');
+const initReports = fs.readFileSync('./app/managers/queries/initDBClickhouse/initReports.sql', 'utf-8');
+const initSlonFacts = fs.readFileSync('./app/managers/queries/initDBClickhouse/initSlonFacts.sql', 'utf-8');
+const initSlonR_tags_v2 = fs.readFileSync('./app/managers/queries/initDBClickhouse/initSlonR_tags_v2.sql', 'utf-8');
+const initMviewsCalltracking = fs.readFileSync('./app/managers/queries/initDBClickhouse/initMviewsCalltracking.sql', 'utf-8');
+const initReportsHistory = fs.readFileSync('./app/managers/queries/initDBClickhouse/initReportsHistory.sql', 'utf-8');
+const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/initDBClickhouse/initReportsHistoryTransferred.sql', 'utf-8');
 
 
 /**
@@ -109,7 +109,20 @@ async function saveHistoryReportsToDB(params, user) {
 
 exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
 
-// INSERT INTO reports.transferred (id_user, id_report) VALUES ('1', 'c7cce607-3736-47e3-938f-5bc9bff02094');
+
+/**
+ * Set reports for user in DB
+ * @param params
+ * @param user
+ * @return {Promise}
+ */
+async function setReportsToDB(params, user) {
+    const query = `INSERT INTO reports.transferred (id_user, id_report) VALUES ('${user.id}', '${params.id}');`;
+    return clickhouse.query(query).toPromise();
+}
+
+exports.setReportsToDB = setReportsToDB;
+
 
 /**
  * Get all fields from table

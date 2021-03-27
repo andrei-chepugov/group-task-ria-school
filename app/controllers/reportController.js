@@ -22,6 +22,25 @@ exports.getReportsList = getReportsList;
 
 
 /**
+ * @example curl -XPUT "http://localhost:8081/reports/transfer" -H 'Content-Type: application/json' -d '{...}'
+ */
+async function setReportsList(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByEmailFromDB(ctx.request.body.email);
+    const reports = await clickhouseDB.setReportsToDB(ctx.request.body, user);
+    if (Array.isArray(reports) && reports.length) {
+        ctx.body = reports;
+        ctx.status = 200;
+    } else {
+        ctx.status = 404;
+    }
+    await next();
+}
+
+exports.setReportsList = setReportsList;
+
+
+/**
  * @example curl -XPOST "http://localhost:8081/report" -H 'Content-Type: application/json' -d '{...}'
  */
 async function createReport(ctx, next) {
