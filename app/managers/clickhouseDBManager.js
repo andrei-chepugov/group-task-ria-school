@@ -12,6 +12,7 @@ const initSlonFacts = fs.readFileSync('./app/managers/queries/initDB/initSlonFac
 const initSlonR_tags_v2 = fs.readFileSync('./app/managers/queries/initDB/initSlonR_tags_v2.sql', 'utf-8');
 const initMviewsCalltracking = fs.readFileSync('./app/managers/queries/initDB/initMviewsCalltracking.sql', 'utf-8');
 const initReportsHistory = fs.readFileSync('./app/managers/queries/initDB/initReportsHistory.sql', 'utf-8');
+const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/initDB/initReportsHistoryTransferred.sql', 'utf-8');
 
 
 /**
@@ -25,6 +26,7 @@ const initReportsHistory = fs.readFileSync('./app/managers/queries/initDB/initRe
     await clickhouse.query(initSlonR_tags_v2).toPromise();
     await clickhouse.query(initMviewsCalltracking).toPromise();
     await clickhouse.query(initReportsHistory).toPromise();
+    await clickhouse.query(initReportsHistoryTransferred).toPromise();
 })()
 
 /**
