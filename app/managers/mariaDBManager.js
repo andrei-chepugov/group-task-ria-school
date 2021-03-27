@@ -24,6 +24,9 @@ class UsersTokenError extends Error {
 class UserTokenError extends Error {
 }
 
+class UserEmailError extends Error {
+}
+
 class GetNames extends Error {
 }
 
@@ -241,6 +244,38 @@ async function getUserByTokenFromDB(token) {
 }
 
 exports.getUserByTokenFromDB = getUserByTokenFromDB;
+
+
+/**
+ * Get user from DB
+ * @param email
+ * @return {Promise<{rows[0]: string} | null>}
+ * @throws {UserEmailError}
+ */
+async function getUserByEmailFromDB(email) {
+    if (typeof email !== 'string') {
+        return null;
+    }
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(`
+            SELECT *
+            FROM users.users
+            WHERE email = ?;`, [email]);
+        if (rows[0]) {
+            return rows[0];
+        } else {
+            return null;
+        }
+    } catch (err) {
+        throw new UserEmailError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.getUserByEmailFromDB = getUserByEmailFromDB;
 
 
 /**
