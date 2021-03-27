@@ -30,6 +30,7 @@ module.exports = {
         user: 'andrei',
         password: '1994',
         database: 'users',
-        connectionLimit: 5
+        connectionLimit: 5,
+        multipleStatements: true
     }
 };
