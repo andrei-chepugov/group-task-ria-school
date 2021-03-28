@@ -1,4 +1,4 @@
-PUT http://localhost:8081/admin/user/grants
+POST http://localhost:8081/admin/user/grants/add
 Content-Type: application/json
 Cookie: token=16166777948950458
 
