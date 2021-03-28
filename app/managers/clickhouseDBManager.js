@@ -31,7 +31,7 @@ const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/in
 
 /**
  * Get all names databases from memory
- * @return {Promise}
+ * @return {Promise<Array<{name: string}>>}
  */
 async function getDatabasesListFromDB() {
     const query = `SELECT name
@@ -45,7 +45,7 @@ exports.getDatabasesListFromDB = getDatabasesListFromDB;
 /**
  * Get all names tables from DB
  * @param db
- * @return {Promise}
+ * @return {Promise<Array<{name: string}>>}
  */
 async function getDatabaseTablesFromDB(db) {
     const query = `SELECT name FROM system.tables WHERE database = '${db}'`;

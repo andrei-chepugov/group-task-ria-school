@@ -217,7 +217,7 @@ exports.getUsersByTokenFromDB = getUsersByTokenFromDB;
 /**
  * Get user by token from DB
  * @param token
- * @return {Promise<{rows[0]: string} | null>}
+ * @return {Promise<{isAdmin: string} | null>}
  * @throws {UserTokenError}
  */
 async function getUserByTokenFromDB(token) {

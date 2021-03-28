@@ -6,8 +6,8 @@ const mariaDB = require('../managers/mariaDBManager');
  */
 async function getDatabasesList(ctx, next) {
     const token = ctx.cookies.get('token');
-    const isChecked = await mariaDB.getUserByTokenFromDB(token);
-    if (isChecked) {
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
         const names = await clickhouseDB.getDatabasesListFromDB();
         if (Array.isArray(names) && names.length) {
             ctx.body = names;
@@ -29,8 +29,8 @@ exports.getDatabasesList = getDatabasesList;
  */
 async function getDatabaseTables(ctx, next) {
     const token = ctx.cookies.get('token');
-    const isChecked = await mariaDB.getUserByTokenFromDB(token);
-    if (isChecked) {
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
         const db = String(ctx.params.name);
         const names = await clickhouseDB.getDatabaseTablesFromDB(db);
         if (Array.isArray(names) && names.length) {
