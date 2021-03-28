@@ -7,8 +7,8 @@ async function importAllTables(ctx, next) {
     const user = await mariaDB.getUserByTokenFromDB(token);
     if (user && user.isAdmin) {
         const tables = await clickhouseDB.getAllTables();
-        await mariaDB.importTablesFromClickhouseIntoDB(tables);
-        ctx.body = tables;
+        const result = await mariaDB.importTablesFromClickhouseIntoDB(tables);
+        ctx.body = result;
     } else {
         ctx.status = 401;
     }
@@ -16,6 +16,21 @@ async function importAllTables(ctx, next) {
 }
 
 exports.importAllTables = importAllTables;
+
+
+async function exportAllTables(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
+        const result = await mariaDB.exportTablesFromMariaDB();
+        ctx.body = result;
+    } else {
+        ctx.status = 401;
+    }
+    await next();
+}
+
+exports.exportAllTables = exportAllTables;
 
 
 /**

@@ -78,6 +78,25 @@ exports.importTablesFromClickhouseIntoDB = importTablesFromClickhouseIntoDB;
 
 
 /**
+ * @return {Promise<{affectedRows: number} | null>}
+ * @throws {UpdateUserError}
+ */
+async function exportTablesFromMariaDB() {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        return await conn.query('SELECT * FROM users.tables ');
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release(); //release to pool
+    }
+}
+
+exports.exportTablesFromMariaDB = exportTablesFromMariaDB;
+
+
+/**
  * Create user in DB
  * @param {{firstName: string, lastName: string, email: string, password: string}} params
  * @return {Promise<{insertId: number} | null>}

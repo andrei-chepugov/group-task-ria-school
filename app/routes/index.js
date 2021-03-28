@@ -31,6 +31,7 @@ router
     // for admin database management
     .get('/admin/databases', schemaAdminController.getDatabasesList)
     .get('/admin/databases/import', schemaAdminController.importAllTables)
+    .get('/admin/databases/export', schemaAdminController.exportAllTables)
     .get('/admin/databases/:name/tables', schemaAdminController.getDatabaseTable)
     .get('/admin/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
 ;
