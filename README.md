@@ -35,6 +35,14 @@ ClickHouse® is a column-oriented database management system (DBMS) for online a
 
 You can also read the [documentation](https://clickhouse.tech/docs/en/)
 
+MariaDB
+=======
+
+MariaDB is a community-developed, commercially supported fork of the MySQL relational database management system (RDBMS)
+, intended to remain free and open-source software under the GNU General Public License. Development is led by some of
+the original developers of MySQL, who forked it due to concerns over its acquisition by Oracle Corporation in 2009.
+
+You can also read the [documentation](https://mariadb.org/documentation/)
 
 Docker
 ======
