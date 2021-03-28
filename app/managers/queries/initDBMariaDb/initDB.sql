@@ -33,13 +33,3 @@ CREATE TABLE IF NOT EXISTS `users`.`usersTables`
     CONSTRAINT `FK_table` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`) ON DELETE CASCADE,
     CONSTRAINT `FK_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
-
-CREATE TABLE IF NOT EXISTS `users`.`test`
-(
-    `id`       int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `database` varchar(50)      NOT NULL,
-    `table`    varchar(50)      NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `test` (`database`, `table`),
-    KEY `id_IDX` (`id`)
-);
