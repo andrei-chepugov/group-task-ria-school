@@ -118,21 +118,32 @@ async function saveHistoryReportsToDB(params, user) {
 exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
 
 
+async function getReportById(id) {
+    if (id === undefined) {
+        return null;
+    }
+    const query = `SELECT * FROM reports.history WHERE id_report = '${id}'`;
+    return clickhouse.query(query).toPromise().then(([report]) => report);
+}
+
+exports.getReportById = getReportById;
+
+
 /**
  * Set reports for user in DB
- * @param params
+ * @param report
  * @param user
  * @return {Promise}
  */
-async function setReportsToDB(params, user) {
-    if (typeof user.id === 'null') {
+async function transferReportsToDB(report, user) {
+    if (user.id === undefined) {
         return null;
     }
-    const query = `INSERT INTO reports.transferred (id_user, id_report) VALUES ('${user.id}', '${params.id}');`;
+    const query = `INSERT INTO reports.transferred (id_user, id_report) VALUES ('${user.id}', '${report.id}');`;
     return clickhouse.query(query).toPromise();
 }
 
-exports.setReportsToDB = setReportsToDB;
+exports.transferReportsToDB = transferReportsToDB;
 
 
 /**
