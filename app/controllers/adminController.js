@@ -68,7 +68,7 @@ exports.deleteUser = deleteUser;
 
 
 /**
- * @example curl -XPOST "http://localhost:8081/admin/update/5" -H 'Content-Type: application/json' -d '{...}'
+ * @example curl -XPOST "http://localhost:8081/admin/user/update/5" -H 'Content-Type: application/json' -d '{...}'
  */
 async function updateUser(ctx, next) {
     const token = ctx.cookies.get('token');

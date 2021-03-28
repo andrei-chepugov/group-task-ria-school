@@ -13,12 +13,12 @@ router
     .get('/admin/users', adminController.getUsersByToken)
     .delete('/admin/user/:id', adminController.deleteUser)
     .get('/admin/user/:id/granted', adminController.getUserGrantedTables)
-    .put('/admin/update-user', KoaBody(), adminController.updateUser)
+    .put('/admin/user/grants', KoaBody(), adminController.updateUser)
+    .put('/admin/user/update', KoaBody(), adminController.updateUser)
     // for admin database management
     .get('/admin/databases', schemaAdminController.getDatabasesList)
     .get('/admin/databases/:name/tables', schemaAdminController.getDatabaseTable)
     .get('/admin/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
-    // "_comment": "Admin update user permissions",
     // .put('/admin/', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
     // .put('/admin/access-rights', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
 
