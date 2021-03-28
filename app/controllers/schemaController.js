@@ -37,7 +37,11 @@ exports.getDatabaseTable = getDatabaseTables;
 
 
 /**
+ * user:
  * @example curl -XGET "http://localhost:8081/databases/slon/tables/facts/fields"
+ *
+ * admin:
+ * @example curl -XGET "http://localhost:8081/admin/databases/slon/tables/facts/fields"
  */
 async function getTableFields(ctx, next) {
     const db = String(ctx.params.name);
