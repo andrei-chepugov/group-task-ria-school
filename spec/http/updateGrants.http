@@ -1,0 +1,18 @@
+PUT http://localhost:8081/admin/user/grants
+Content-Type: application/json
+Cookie: token=16166777948950458
+
+{
+  "user_id": 1,
+  "tables": [
+    {
+      "table_id": 3
+    },
+    {
+      "table_id": 2
+    },
+    {
+      "table_id": 1
+    }
+  ]
+}

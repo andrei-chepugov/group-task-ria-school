@@ -68,6 +68,24 @@ exports.deleteUser = deleteUser;
 
 
 /**
+ * @example curl -XPUT "http://localhost:8081/admin/user/grants" -H 'Content-Type: application/json' -d '{...}'
+ */
+async function updateUserGrantedTables(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
+        const updated = await mariaDB.updateUserGrantedTablesInDB(ctx.request.body);
+        ctx.body = {updated};
+    } else {
+        ctx.status = 401;
+    }
+    await next();
+}
+
+exports.updateUserGrantedTables = updateUserGrantedTables;
+
+
+/**
  * @example curl -XPOST "http://localhost:8081/admin/user/update/5" -H 'Content-Type: application/json' -d '{...}'
  */
 async function updateUser(ctx, next) {

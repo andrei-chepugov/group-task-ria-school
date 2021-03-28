@@ -312,6 +312,41 @@ exports.getUserGrantedTablesFromDB = getUserGrantedTablesFromDB;
 
 
 /**
+ * Update user from DB
+ * @description to admins usage only (modifies isAdmin field params)
+ * @param {{user_id: string|number, tables: Array<{table_id: number}>>}} params
+ * @return {Promise<{affectedRows: number} | null>}
+ * @throws {UpdateUserError}
+ */
+async function updateUserGrantedTablesInDB(params) {
+    if (!params || !params.user_id || !Array.isArray(params.tables) || !params.tables.length) {
+        throw new Error(`invalid input params: ${JSON.stringify(params)}`);
+    }
+    let conn;
+    try {
+        let query = 'INSERT IGNORE INTO users.usersTables (user_id, table_id) VALUES ';
+        let queryParams = [];
+        let querySets = [];
+        for (let table of params.tables) {
+            querySets.push(`(?, ?)`);
+            queryParams.push(params.user_id);
+            queryParams.push(table.table_id);
+        }
+        query += querySets.join(', ');
+        conn = await pool.getConnection();
+        const res = await conn.query(query, queryParams);
+        return res.affectedRows;
+    } catch (err) {
+        throw new UpdateUserError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.updateUserGrantedTablesInDB = updateUserGrantedTablesInDB;
+
+
+/**
  * Get database names from DB
  * @param token
  * @return {Promise<{query: string} | null>}
