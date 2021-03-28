@@ -1,3 +1,8 @@
-GET http://localhost:8081/reports
+PUT http://localhost:8081/reports/transfer
 Content-Type: application/json
 Cookie: token=16166777948950458
+
+{
+  "id": "04d1952b-4803-4912-9f70-e171a4e799b",
+  "email": "billy.bons@ria.com"
+}
