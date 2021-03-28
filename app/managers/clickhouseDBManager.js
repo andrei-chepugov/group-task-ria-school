@@ -111,7 +111,7 @@ exports.createReportToDB = createReportToDB;
  * @return {Promise}
  */
 async function saveHistoryReportsToDB(params, user) {
-    const query = `INSERT INTO reports.history (id_user, name, isSave, request) VALUES ('${user.id}', '${params.name}', '${params.isSave}', '${JSON.stringify(params)}')`;
+    const query = `INSERT INTO reports.history (id_user, firstName, lastName, name, isSave, request) VALUES ('${user.id}', '${user.firstName}', '${user.lastName}', '${params.name}', '${params.isSave}', '${JSON.stringify(params)}')`;
     return clickhouse.query(query).toPromise();
 }
 
