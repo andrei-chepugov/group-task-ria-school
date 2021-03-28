@@ -9,6 +9,18 @@ const Router = require('koa-router'),
 const router = new Router();
 
 router
+    // for user database management
+    .get('/databases', schemaController.getDatabasesList)
+    .get('/databases/:name/tables', schemaController.getDatabaseTable)
+    .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
+    .post('/report', KoaBody(), reportController.createReport) // for user, in progress...
+    .get('/reports', reportController.getReportsList) // for admin & user
+    .put('/reports/transfer', KoaBody(), reportController.setReportsList)
+    // for user himself management
+    .get('/user', userController.getUserByToken)
+    .post('/login', KoaBody(), userController.getLoginUser)
+    .get('/logout', userController.getLogoutUserByToken)
+    .post('/sign-in', KoaBody(), userController.createUser)
     // for admin user management
     .get('/admin/users', adminController.getUsersByToken)
     .delete('/admin/user/:id', adminController.deleteUser)
@@ -19,23 +31,7 @@ router
     .get('/admin/databases', schemaAdminController.getDatabasesList)
     .get('/admin/databases/:name/tables', schemaAdminController.getDatabaseTable)
     .get('/admin/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
-    // .put('/admin/', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
-    // .put('/admin/access-rights', schemaAdminController.setAccessRightsUserForTable) // for admin, in progress...
-
-    // for user himself management
-    .get('/user', userController.getUserByToken)
-    .get('/logout', userController.getLogoutUserByToken)
-    .post('/sign-in', KoaBody(), userController.createUser)
-    .post('/login', KoaBody(), userController.getLoginUser)
-    // for user database management
-    .get('/databases', schemaController.getDatabasesList)
-    .get('/databases/:name/tables', schemaController.getDatabaseTable)
-    .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
-    .post('/report', KoaBody(), reportController.createReport) // for user, in progress...
-    .get('/reports', reportController.getReportsList) // for admin & user
-    .put('/reports/transfer', KoaBody(), reportController.setReportsList);
-
-
+;
 
 module.exports = {
     routes() {
