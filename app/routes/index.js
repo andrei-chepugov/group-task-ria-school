@@ -11,7 +11,7 @@ const router = new Router();
 router
     // for admin user management
     .get('/admin/users', adminController.getUsersByToken)
-    .get('/admin/delete/:id', adminController.deleteUser)
+    .delete('/admin/user/:id', adminController.deleteUser)
     .get('/admin/user/:id/granted', adminController.getUserGrantedTables)
     .put('/admin/update-user', KoaBody(), adminController.updateUser)
     // for admin database management
