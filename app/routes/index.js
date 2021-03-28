@@ -12,7 +12,7 @@ router
     // for admin user management
     .get('/admin/users', adminController.getUsersByToken)
     .get('/admin/delete/:id', adminController.deleteUser)
-    .get('/admin/user/:id/granted', adminController.getUserGrantedTables) //
+    .get('/admin/user/:id/granted', adminController.getUserGrantedTables)
     .put('/admin/update-user', KoaBody(), adminController.updateUser)
     // for admin database management
     .get('/admin/databases', schemaAdminController.getDatabasesList)
@@ -30,9 +30,10 @@ router
     .get('/databases', schemaController.getDatabasesList)
     .get('/databases/:name/tables', schemaController.getDatabaseTable)
     .get('/databases/:name/tables/:tableName/fields', schemaController.getTableFields)
-    .get('/reports', reportController.getReportsList) // for admin & user (true/false)
-    .put('/reports/transfer', KoaBody(), reportController.setReportsList)
-    .post('/report', KoaBody(), reportController.createReport); // for user, in progress...
+    .post('/report', KoaBody(), reportController.createReport) // for user, in progress...
+    .get('/reports', reportController.getReportsList) // for admin & user
+    .put('/reports/transfer', KoaBody(), reportController.setReportsList);
+
 
 
 module.exports = {
