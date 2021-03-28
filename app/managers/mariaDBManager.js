@@ -48,6 +48,36 @@ class GetNames extends Error {
 
 
 /**
+ * @param {Array<{database: string, table: string}>} tables
+ * @return {Promise<{affectedRows: number} | null>}
+ * @throws {UpdateUserError}
+ */
+async function importTablesFromClickhouseIntoDB(tables) {
+    let conn;
+    try {
+        let query = 'INSERT IGNORE INTO users.tables (`database`, `table`) VALUES ';
+        let queryParams = [];
+        let querySets = [];
+        for (let table of tables) {
+            querySets.push(`(?, ?)`);
+            queryParams.push(table.database);
+            queryParams.push(table.table);
+        }
+        query += querySets.join(', ');
+        conn = await pool.getConnection();
+        const res = await conn.query(query, queryParams);
+        return res.affectedRows;
+    } catch (err) {
+        throw new UpdateUserError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.importTablesFromClickhouseIntoDB = importTablesFromClickhouseIntoDB;
+
+
+/**
  * Create user in DB
  * @param {{firstName: string, lastName: string, email: string, password: string}} params
  * @return {Promise<{insertId: number} | null>}

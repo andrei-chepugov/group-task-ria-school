@@ -1,6 +1,23 @@
 const clickhouseDB = require('../managers/clickhouseDBManager');
 const mariaDB = require('../managers/mariaDBManager');
 
+
+async function importAllTables(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
+        const tables = await clickhouseDB.getAllTables()
+        const result = await mariaDB.importTablesFromClickhouseIntoDB(tables)
+        ctx.body = result;
+    } else {
+        ctx.status = 401;
+    }
+    await next();
+}
+
+exports.importAllTables = importAllTables;
+
+
 /**
  * @example curl -XGET "http://localhost:8081/admin/databases"
  */

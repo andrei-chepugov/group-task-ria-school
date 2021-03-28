@@ -29,6 +29,14 @@ const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/in
     await clickhouse.query(initReportsHistoryTransferred).toPromise();
 })()
 
+
+async function getAllTables() {
+    const tables = "SELECT database, name as table FROM system.tables WHERE database NOT IN ('system', 'default', 'reports')"
+    return clickhouse.query(tables).toPromise();
+}
+
+exports.getAllTables = getAllTables;
+
 /**
  * Get all names databases from memory
  * @return {Promise<Array<{name: string}>>}
