@@ -46,7 +46,7 @@ exports.getUserGrantedTables = getUserGrantedTables;
 
 
 /**
- * @example curl -XGET "http://localhost:8081/admin/delete/5"
+ * @example curl -XDELETE "http://localhost:8081/admin/delete/5"
  */
 async function deleteUser(ctx, next) {
     const token = ctx.cookies.get('token');
@@ -68,7 +68,7 @@ exports.deleteUser = deleteUser;
 
 
 /**
- * @example curl -XPUT "http://localhost:8081/admin/user/grants" -H 'Content-Type: application/json' -d '{...}'
+ * @example curl -XPOST "http://localhost:8081/admin/user/grants/add" -H 'Content-Type: application/json' -d '{...}'
  */
 async function updateUserGrantedTables(ctx, next) {
     const token = ctx.cookies.get('token');
@@ -104,7 +104,7 @@ exports.deleteUserGrantedTables = deleteUserGrantedTables;
 
 
 /**
- * @example curl -XPOST "http://localhost:8081/admin/user/update/5" -H 'Content-Type: application/json' -d '{...}'
+ * @example curl -XPUT "http://localhost:8081/admin/user/update" -H 'Content-Type: application/json' -d '{...}'
  */
 async function updateUser(ctx, next) {
     const token = ctx.cookies.get('token');

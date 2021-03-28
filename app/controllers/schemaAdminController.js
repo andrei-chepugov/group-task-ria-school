@@ -2,6 +2,9 @@ const clickhouseDB = require('../managers/clickhouseDBManager');
 const mariaDB = require('../managers/mariaDBManager');
 
 
+/**
+ * @example curl -XGET "http://localhost:8081/admin/databases/import"
+ */
 async function importAllTables(ctx, next) {
     const token = ctx.cookies.get('token');
     const user = await mariaDB.getUserByTokenFromDB(token);
@@ -18,6 +21,9 @@ async function importAllTables(ctx, next) {
 exports.importAllTables = importAllTables;
 
 
+/**
+ * @example curl -XGET "http://localhost:8081/admin/databases/export"
+ */
 async function exportAllTables(ctx, next) {
     const token = ctx.cookies.get('token');
     const user = await mariaDB.getUserByTokenFromDB(token);
