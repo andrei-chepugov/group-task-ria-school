@@ -13,7 +13,7 @@ router
     .get('/admin/users', adminController.getUsersByToken)
     .delete('/admin/user/:id', adminController.deleteUser)
     .get('/admin/user/:id/granted', adminController.getUserGrantedTables)
-    .put('/admin/user/grants', KoaBody(), adminController.updateUser)
+    .put('/admin/user/grants', KoaBody(), adminController.updateUserGrantedTables)
     .put('/admin/user/update', KoaBody(), adminController.updateUser)
     // for admin database management
     .get('/admin/databases', schemaAdminController.getDatabasesList)
