@@ -103,7 +103,7 @@ exports.createReportToDB = createReportToDB;
  * @return {Promise}
  */
 async function saveHistoryReportsToDB(params, user) {
-    const query = `INSERT INTO reports.history (id_user, name, request) VALUES ('${user.id}', '${params.name}', '${JSON.stringify(params)}')`;
+    const query = `INSERT INTO reports.history (id_user, name, isSave, request) VALUES ('${user.id}', '${params.name}', '${params.isSave}', '${JSON.stringify(params)}')`;
     return clickhouse.query(query).toPromise();
 }
 
@@ -117,6 +117,9 @@ exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
  * @return {Promise}
  */
 async function setReportsToDB(params, user) {
+    if (typeof user.id === 'null') {
+        return null;
+    }
     const query = `INSERT INTO reports.transferred (id_user, id_report) VALUES ('${user.id}', '${params.id}');`;
     return clickhouse.query(query).toPromise();
 }
@@ -133,7 +136,7 @@ async function getReportsfromDB(user) {
     let query = user.isAdmin ?
         `SELECT *
          FROM reports.history;` :
-        `SELECT * FROM reports.history WHERE id_user = '${user.id}' OR id_report IN (SELECT id_report FROM reports.transferred WHERE id_user = '${user.id}');`;
+        `SELECT * FROM reports.history WHERE id_user = '${user.id}' AND isSave = 1 OR id_report IN (SELECT id_report FROM reports.transferred WHERE id_user = '${user.id}');`;
     return clickhouse.query(query).toPromise();
 }
 
