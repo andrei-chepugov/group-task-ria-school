@@ -147,6 +147,22 @@ exports.transferReportsToDB = transferReportsToDB;
 
 
 /**
+ * Delete report for DB
+ * @param id
+ * @return {Promise}
+ */
+async function deleteReportFromDB(id) {
+    if (id === undefined) {
+        return null;
+    }
+    const query = `ALTER TABLE reports.history UPDATE isSave = 0 WHERE id_user = '${id}'`;
+    return clickhouse.query(query).toPromise();
+}
+
+exports.deleteReportFromDB = deleteReportFromDB;
+
+
+/**
  * Get all fields from table
  * @param user
  * @return {Promise}

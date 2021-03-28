@@ -16,6 +16,7 @@ router
     .post('/report', KoaBody(), reportController.createReport) // for user, in progress...
     .get('/reports', reportController.getReportsList) // for admin & user
     .put('/reports/transfer', KoaBody(), reportController.transferReport)
+    .delete('/reports/:id', reportController.deleteReport)
     // for user himself management
     .get('/user', userController.getUserByToken)
     .post('/login', KoaBody(), userController.getLoginUser)

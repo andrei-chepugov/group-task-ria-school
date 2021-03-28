@@ -50,6 +50,30 @@ exports.transferReport = transferReport;
 
 
 /**
+ * @example curl -XDELETE "http://localhost:8081/reports/5"
+ */
+async function deleteReport(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const userSource = await mariaDB.getUserByTokenFromDB(token);
+    if (!userSource) {
+        return ctx.status = 401;
+    }
+    const report = await clickhouseDB.getReportById(ctx.params.id).catch(() => null);
+    if (!report) {
+        return ctx.status = 404;
+    }
+    if (Number(report.id_user) !== userSource.id) {
+        return ctx.status = 403;
+    }
+    await clickhouseDB.deleteReportFromDB(ctx.params.id);
+    ctx.status = 200;
+    await next();
+}
+
+exports.deleteReport = deleteReport;
+
+
+/**
  * @example curl -XPOST "http://localhost:8081/report" -H 'Content-Type: application/json' -d '{...}'
  */
 async function createReport(ctx, next) {
