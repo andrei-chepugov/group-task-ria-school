@@ -6,9 +6,9 @@ async function importAllTables(ctx, next) {
     const token = ctx.cookies.get('token');
     const user = await mariaDB.getUserByTokenFromDB(token);
     if (user && user.isAdmin) {
-        const tables = await clickhouseDB.getAllTables()
-        const result = await mariaDB.importTablesFromClickhouseIntoDB(tables)
-        ctx.body = result;
+        const tables = await clickhouseDB.getAllTables();
+        await mariaDB.importTablesFromClickhouseIntoDB(tables);
+        ctx.body = tables;
     } else {
         ctx.status = 401;
     }
