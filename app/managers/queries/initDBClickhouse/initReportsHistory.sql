@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS reports.history
 (
     `id_user`    String,
+    `firstName`  String,
+    `lastName`   String,
     `id_report`  UUID default generateUUIDv4(),
     `name`       String,
     `isSave`     String,
