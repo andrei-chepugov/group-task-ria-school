@@ -215,7 +215,7 @@ exports.getUsersByTokenFromDB = getUsersByTokenFromDB;
 
 
 /**
- * Get user from DB
+ * Get user by token from DB
  * @param token
  * @return {Promise<{rows[0]: string} | null>}
  * @throws {UserTokenError}
@@ -247,7 +247,7 @@ exports.getUserByTokenFromDB = getUserByTokenFromDB;
 
 
 /**
- * Get user from DB
+ * Get user by email from DB
  * @param email
  * @return {Promise<{rows[0]: string} | null>}
  * @throws {UserEmailError}
@@ -276,6 +276,39 @@ async function getUserByEmailFromDB(email) {
 }
 
 exports.getUserByEmailFromDB = getUserByEmailFromDB;
+
+
+/**
+ * Get user granted from DB
+ * @param id
+ * @return {Promise<{rows[0]: string} | null>}
+ * @throws {UserEmailError}
+ */
+async function getUserGrantedTablesFromDB(id) {
+    if (typeof id !== 'string') {
+        return null;
+    }
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(`
+            SELECT *
+            FROM users.usersTables
+                     INNER JOIN users.tables ON table_id = tables.id
+            WHERE user_id = ?;`, [id]);
+        if (rows[0]) {
+            return rows;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        throw new UserEmailError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.getUserGrantedTablesFromDB = getUserGrantedTablesFromDB;
 
 
 /**

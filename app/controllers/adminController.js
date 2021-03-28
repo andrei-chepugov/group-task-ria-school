@@ -24,6 +24,28 @@ exports.getUsersByToken = getUsersByToken;
 
 
 /**
+ * @example curl -XGET "http://localhost:8081/admin/user/5/granted"
+ */
+async function getUserGrantedTables(ctx, next) {
+    const token = ctx.cookies.get('token');
+    const user = await mariaDB.getUserByTokenFromDB(token);
+    if (user && user.isAdmin) {
+        const users = await mariaDB.getUserGrantedTablesFromDB(ctx.params.id);
+        if (users) {
+            ctx.body = users;
+        } else {
+            ctx.status = 401;
+        }
+    } else {
+        ctx.status = 401;
+    }
+    await next();
+}
+
+exports.getUserGrantedTables = getUserGrantedTables;
+
+
+/**
  * @example curl -XGET "http://localhost:8081/admin/delete/5"
  */
 async function deleteUser(ctx, next) {
