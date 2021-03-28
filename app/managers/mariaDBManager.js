@@ -6,10 +6,20 @@ const generateToken = require('../helpers/generateToken.js');
 const pool = mariadb.createPool(config.mariaDb);
 const initMariaDb = fs.readFileSync('./app/managers/queries/initDBMariaDb/initDB.sql', 'utf-8');
 
+
+class ImportError extends Error {
+}
+
+class ExportError extends Error {
+}
+
 class CreateUserError extends Error {
 }
 
 class UserLoginError extends Error {
+}
+
+class UserGrantedError extends Error {
 }
 
 class UpdateUserError extends Error {
@@ -27,7 +37,7 @@ class UserTokenError extends Error {
 class UserEmailError extends Error {
 }
 
-class GetNames extends Error {
+class GetNamesError extends Error {
 }
 
 
@@ -48,9 +58,10 @@ class GetNames extends Error {
 
 
 /**
+ * Import all tables from clickhouse into mariDB
  * @param {Array<{database: string, table: string}>} tables
  * @return {Promise<{affectedRows: number} | null>}
- * @throws {UpdateUserError}
+ * @throws {ImportError}
  */
 async function importTablesFromClickhouseIntoDB(tables) {
     let conn;
@@ -68,7 +79,7 @@ async function importTablesFromClickhouseIntoDB(tables) {
         const res = await conn.query(query, queryParams);
         return res.affectedRows;
     } catch (err) {
-        throw new UpdateUserError(err.message);
+        throw new ImportError(err.message);
     } finally {
         if (conn) conn.release();
     }
@@ -78,8 +89,9 @@ exports.importTablesFromClickhouseIntoDB = importTablesFromClickhouseIntoDB;
 
 
 /**
+ * Export all tables from mariDB
  * @return {Promise<{affectedRows: number} | null>}
- * @throws {UpdateUserError}
+ * @throws {ExportError}
  */
 async function exportTablesFromMariaDB() {
     let conn;
@@ -87,9 +99,9 @@ async function exportTablesFromMariaDB() {
         conn = await pool.getConnection();
         return await conn.query('SELECT * FROM users.tables ');
     } catch (err) {
-        throw err;
+        throw new ExportError(err.message);
     } finally {
-        if (conn) conn.release(); //release to pool
+        if (conn) conn.release();
     }
 }
 
@@ -331,7 +343,7 @@ exports.getUserByEmailFromDB = getUserByEmailFromDB;
  * Get user granted from DB
  * @param id
  * @return {Promise<{rows[0]: string} | null>}
- * @throws {UserEmailError}
+ * @throws {UserGrantedError}
  */
 async function getUserGrantedTablesFromDB(id) {
     if (typeof id !== 'string') {
@@ -351,7 +363,7 @@ async function getUserGrantedTablesFromDB(id) {
             return null;
         }
     } catch (err) {
-        throw new UserEmailError(err.message);
+        throw new UserGrantedError(err.message);
     } finally {
         if (conn) conn.release();
     }
@@ -361,11 +373,11 @@ exports.getUserGrantedTablesFromDB = getUserGrantedTablesFromDB;
 
 
 /**
- * Update user from DB
+ * Update user granted from DB
  * @description to admins usage only (modifies isAdmin field params)
  * @param {{user_id: string|number, tables: Array<{table_id: number}>>}} params
  * @return {Promise<{affectedRows: number} | null>}
- * @throws {UpdateUserError}
+ * @throws {UserGrantedError}
  */
 async function updateUserGrantedTablesInDB(params) {
     if (!params || !params.user_id || !Array.isArray(params.tables) || !params.tables.length) {
@@ -386,7 +398,7 @@ async function updateUserGrantedTablesInDB(params) {
         const res = await conn.query(query, queryParams);
         return res.affectedRows;
     } catch (err) {
-        throw new UpdateUserError(err.message);
+        throw new UserGrantedError(err.message);
     } finally {
         if (conn) conn.release();
     }
@@ -396,11 +408,11 @@ exports.updateUserGrantedTablesInDB = updateUserGrantedTablesInDB;
 
 
 /**
- * Update user from DB
+ * Delete user granted from DB
  * @description to admins usage only (modifies isAdmin field params)
  * @param {{user_id: string|number, tables: Array<{table_id: number}>>}} params
  * @return {Promise<{affectedRows: number} | null>}
- * @throws {UpdateUserError}
+ * @throws {UserGrantedError}
  */
 async function deleteUserGrantedTablesInDB(params) {
     if (!params || !params.user_id || !Array.isArray(params.tables) || !params.tables.length) {
@@ -421,7 +433,7 @@ async function deleteUserGrantedTablesInDB(params) {
         const res = await conn.query(query, queryParams);
         return res.affectedRows;
     } catch (err) {
-        throw new UpdateUserError(err.message);
+        throw new UserGrantedError(err.message);
     } finally {
         if (conn) conn.release();
     }
@@ -500,7 +512,7 @@ exports.getTableNameInDatabaseByToken = getTableNameInDatabaseByToken;
  * Get table and database accessible for user from DB
  * @param token
  * @return {Promise<{query: string} | null>}
- * @throws {GetNames}
+ * @throws {GetNamesError}
  */
 async function getTablesDatabaseByToken(token) {
     let conn;
@@ -524,7 +536,7 @@ async function getTablesDatabaseByToken(token) {
             return null;
         }
     } catch (err) {
-        throw new GetNames(err.message);
+        throw new GetNamesError(err.message);
     } finally {
         if (conn) conn.release();
     }

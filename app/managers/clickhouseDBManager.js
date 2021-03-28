@@ -30,25 +30,29 @@ const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/in
 })()
 
 
+/**
+ * Get all tables from memory
+ * @return {Promise<Array<{database: string, name: string}>>}
+ */
 async function getAllTables() {
-    const tables = "SELECT database, name as table FROM system.tables WHERE database NOT IN ('system', 'default', 'reports')"
+    const tables = 'SELECT database, name as table FROM system.tables WHERE database NOT IN ("system", "default", "reports")';
     return clickhouse.query(tables).toPromise();
 }
 
 exports.getAllTables = getAllTables;
+
 
 /**
  * Get all names databases from memory
  * @return {Promise<Array<{name: string}>>}
  */
 async function getDatabasesListFromDB() {
-    const query = `SELECT name
-                   FROM system.databases
-                   WHERE name NOT IN ('system', 'default', 'reports')`;
+    const query = 'SELECT name FROM system.databases WHERE name NOT IN ("system", "default", "reports")';
     return clickhouse.query(query).toPromise();
 }
 
 exports.getDatabasesListFromDB = getDatabasesListFromDB;
+
 
 /**
  * Get all names tables from DB
@@ -74,11 +78,12 @@ const typeMapping = {
     "Array(UInt32)": "[Number]",
 }
 
+
 /**
  * Get all names fields from table
  * @param db
  * @param table
- * @return {Promise}
+ * @return {Promise<Array<{name: string, type: string}>>}
  */
 async function getTableFieldsFromDB(db, table) {
     const query = `SELECT name, type FROM system.columns WHERE database = '${db}' AND table = '${table}'`;
@@ -91,8 +96,9 @@ async function getTableFieldsFromDB(db, table) {
 
 exports.getTableFieldsFromDB = getTableFieldsFromDB;
 
+
 /**
- * Get fields from table
+ * Get fields from tables
  * @param params
  * @return {Promise}
  */
@@ -118,6 +124,11 @@ async function saveHistoryReportsToDB(params, user) {
 exports.saveHistoryReportsToDB = saveHistoryReportsToDB;
 
 
+/**
+ * Get report from DB
+ * @param id
+ * @return {Promise}
+ */
 async function getReportById(id) {
     if (id === undefined) {
         return null;
@@ -130,7 +141,7 @@ exports.getReportById = getReportById;
 
 
 /**
- * Set reports for user in DB
+ * Add report for user in DB
  * @param report
  * @param user
  * @return {Promise}
@@ -169,8 +180,7 @@ exports.deleteReportFromDB = deleteReportFromDB;
  */
 async function getReportsfromDB(user) {
     let query = user.isAdmin ?
-        `SELECT *
-         FROM reports.history;` :
+        'SELECT * FROM reports.history;' :
         `SELECT * FROM reports.history WHERE id_user = '${user.id}' AND isSave = 1 OR id_report IN (SELECT id_report FROM reports.transferred WHERE id_user = '${user.id}');`;
     return clickhouse.query(query).toPromise();
 }
