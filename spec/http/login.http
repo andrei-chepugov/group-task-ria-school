@@ -1,9 +1,8 @@
-POST http://localhost:8081/sign-in
+POST http://localhost:8081/login
 Content-Type: application/json
+Cookie: token=16166777948950458
 
 {
-  "name": "Andrei",
-  "surname": "Chepugov",
-  "email": "andrei.chepugov@ria.com",
-  "password": "123"
+  "email": "billy.bones@ria.com",
+  "pass": "123456789"
 }

@@ -1,9 +1,8 @@
-PUT http://localhost:8081/admin/user/update
+POST http://localhost:8081/sign-in
 Content-Type: application/json
 Cookie: token=16166777948950458
 
 {
-  "id": "1",
   "firstName": "Billy",
   "lastName": "Bones",
   "email": "billy.bones@ria.com",

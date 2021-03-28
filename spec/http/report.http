@@ -1,8 +1,9 @@
 POST http://localhost:8081/report
 Content-Type: application/json
+Cookie: token=16166777948950458
 
 {
-  "name": "List1",
+  "name": "List",
   "fields": [
     {
       "database": "slon",
@@ -84,5 +85,6 @@ Content-Type: application/json
       "type": "asc"
     }
   ],
-  "limit": 100
+  "limit": 100,
+  "isSave": 1
 }
