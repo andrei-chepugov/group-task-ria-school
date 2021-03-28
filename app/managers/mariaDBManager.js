@@ -347,6 +347,41 @@ exports.updateUserGrantedTablesInDB = updateUserGrantedTablesInDB;
 
 
 /**
+ * Update user from DB
+ * @description to admins usage only (modifies isAdmin field params)
+ * @param {{user_id: string|number, tables: Array<{table_id: number}>>}} params
+ * @return {Promise<{affectedRows: number} | null>}
+ * @throws {UpdateUserError}
+ */
+async function deleteUserGrantedTablesInDB(params) {
+    if (!params || !params.user_id || !Array.isArray(params.tables) || !params.tables.length) {
+        throw new Error(`invalid input params: ${JSON.stringify(params)}`);
+    }
+    let conn;
+    try {
+        let query = 'DELETE IGNORE FROM users.usersTables WHERE ';
+        let queryParams = [];
+        let querySets = [];
+        for (let table of params.tables) {
+            querySets.push(`(user_id = ? AND table_id = ?)`);
+            queryParams.push(params.user_id);
+            queryParams.push(table.table_id);
+        }
+        query += querySets.join(' OR ');
+        conn = await pool.getConnection();
+        const res = await conn.query(query, queryParams);
+        return res.affectedRows;
+    } catch (err) {
+        throw new UpdateUserError(err.message);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+exports.deleteUserGrantedTablesInDB = deleteUserGrantedTablesInDB;
+
+
+/**
  * Get database names from DB
  * @param token
  * @return {Promise<{query: string} | null>}
