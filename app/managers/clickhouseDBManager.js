@@ -35,7 +35,7 @@ const initReportsHistoryTransferred = fs.readFileSync('./app/managers/queries/in
  * @return {Promise<Array<{database: string, name: string}>>}
  */
 async function getAllTables() {
-    const tables = 'SELECT database, name as table FROM system.tables WHERE database NOT IN ("system", "default", "reports")';
+    const tables = "SELECT database, name as table FROM system.tables WHERE database NOT IN ('system', 'default', 'reports')";
     return clickhouse.query(tables).toPromise();
 }
 
@@ -47,7 +47,7 @@ exports.getAllTables = getAllTables;
  * @return {Promise<Array<{name: string}>>}
  */
 async function getDatabasesListFromDB() {
-    const query = 'SELECT name FROM system.databases WHERE name NOT IN ("system", "default", "reports")';
+    const query = "SELECT name FROM system.databases WHERE name NOT IN ('system', 'default', 'reports')";
     return clickhouse.query(query).toPromise();
 }
 
@@ -180,7 +180,7 @@ exports.deleteReportFromDB = deleteReportFromDB;
  */
 async function getReportsfromDB(user) {
     let query = user.isAdmin ?
-        'SELECT * FROM reports.history;' :
+        "SELECT * FROM reports.history;" :
         `SELECT * FROM reports.history WHERE id_user = '${user.id}' AND isSave = 1 OR id_report IN (SELECT id_report FROM reports.transferred WHERE id_user = '${user.id}');`;
     return clickhouse.query(query).toPromise();
 }
