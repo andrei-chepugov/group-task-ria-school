@@ -50,7 +50,7 @@ exports.transferReport = transferReport;
 
 
 /**
- * @example curl -XDELETE "http://localhost:8081/reports/5"
+ * @example curl -XDELETE "http://localhost:8081/reports/6cb8a12f-dc09-42bf-ba87-aa50ad3756c2"
  */
 async function deleteReport(ctx, next) {
     const token = ctx.cookies.get('token');

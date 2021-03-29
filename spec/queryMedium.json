@@ -20,7 +20,15 @@
         "database": "slon",
         "table": "r_tags_v2",
         "foreignKey": "user_id",
-        "targetKey": "user_id"
+        "targetKey": "user_id",
+        "joins": [
+          {
+            "database": "slon",
+            "table": "r_tags_v2",
+            "foreignKey": "user_id",
+            "targetKey": "user_id"
+          }
+        ]
       }
     ]
   },

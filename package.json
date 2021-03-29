@@ -27,6 +27,7 @@
   "scripts": {
     "start": "node --harmony index.js",
     "start:watch": "forever -w index.js",
+    "start:test": "forever -w test.js",
     "test": "mocha app/**/*.test.js"
   },
   "engines": {

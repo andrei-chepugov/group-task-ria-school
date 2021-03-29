@@ -166,7 +166,7 @@ async function deleteReportFromDB(id) {
     if (id === undefined) {
         return null;
     }
-    const query = `ALTER TABLE reports.history UPDATE isSave = 0 WHERE id_user = '${id}'`;
+    const query = `ALTER TABLE reports.history UPDATE isSave = 0 WHERE id_report = '${id}'`;
     return clickhouse.query(query).toPromise();
 }
 
